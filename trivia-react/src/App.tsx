@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import pk1 from "./assets/Post It-Key 1.png";
@@ -160,6 +160,20 @@ function App() {
   const [answers, setAnswers] = useState<string[]>(Array(4).fill(""));
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(15 * 60); // Set timer
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(Math.abs(seconds) / 60);
+    const s = Math.abs(seconds) % 60;
+    return `${seconds < 0 ? "-" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
+  };
 
   const currentQuestions =
     questionGroups.find((group) => group.group === selectedGroup)?.questions ||
@@ -212,6 +226,7 @@ function App() {
       }}
     >
       <div className="overlay">
+        <div className="timer">{formatTime(secondsLeft)}</div>
         <div className="container mt-5">
           <h1 className="mb-4 text-center">Trivia Quiz</h1>
           <div className="mb-3">
@@ -285,7 +300,10 @@ function App() {
           </div>
         </div>
         <footer className="footer">
-          <p>Developed by Panitia CAO and the Creative Space Coding Team</p>
+          <p>
+            Developed by Panitia CAO in collaboration with Creative Space Coding
+            Team
+          </p>
         </footer>
       </div>
     </div>
