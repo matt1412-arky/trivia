@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Modal from "./components/SuccessModal"; // Import the Modal component
+
 import pk1 from "./assets/Post It-Key 1.png";
 import pk2 from "./assets/Post It-Key 2.png";
 import pk3 from "./assets/Post It-Key 3.png";
@@ -161,6 +163,7 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(15 * 60); // Set timer
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -199,14 +202,17 @@ function App() {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    if (allCorrect) {
+      setShowModal(true); // Show modal on success
+    }
   };
 
   const handleGroupChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newGroup = parseInt(event.target.value);
     setSelectedGroup(newGroup);
-    setAnswers(Array(4).fill("")); // Reset jawaban
-    setCurrentQuestion(0); // Reset pertanyaan saat ini
-    setSubmitted(false); // Reset status submitted
+    setAnswers(Array(4).fill("")); // Reset answers
+    setCurrentQuestion(0); // Reset current question
+    setSubmitted(false); // Reset submitted status
   };
 
   const allCorrect = answers.every(
@@ -214,6 +220,8 @@ function App() {
       answer.trim().toLowerCase() ===
       currentQuestions[index].correctAnswer.trim().toLowerCase()
   );
+
+  const closeModal = () => setShowModal(false);
 
   return (
     <div
@@ -262,11 +270,11 @@ function App() {
               </ul>
             </div>
           )}
-          {submitted && allCorrect && (
+          {/* {submitted && allCorrect && (
             <div className="alert alert-success text-center mt-4">
               Congratulations! You answered all questions correctly!
             </div>
-          )}
+          )} */}
           <div className="card mb-3">
             <div className="card-body">
               <h5 className="card-title">
@@ -306,6 +314,13 @@ function App() {
           </p>
         </footer>
       </div>
+
+      {/* Render the modal */}
+      <Modal
+        isVisible={showModal}
+        message="Congratulations! You answered all questions correctly!"
+        onClose={closeModal}
+      />
     </div>
   );
 }
