@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { APIQuestionResponse, DataType, Question, QuestionGroup, SubmitRequestBody, SubmitResponse } from "./types";
 
 import pk1 from "./assets/Post It-Key 1.png";
 import pk2 from "./assets/Post It-Key 2.png";
@@ -16,18 +17,7 @@ import mb5 from "./assets/Mandi Bola-5.png";
 import rm from "./assets/Reverse Mirror.png";
 import gtd from "./assets/Glow in The Dark.png";
 
-type Question = {
-  question: string;
-  correctAnswer: string;
-  background: string;
-};
-
-type QuestionGroup = {
-  group: number;
-  questions: Question[];
-};
-
-const questionGroups: QuestionGroup[] = [
+const predefinedQuestionGroups: QuestionGroup[] = [
   {
     group: 1,
     questions: [
@@ -155,11 +145,76 @@ const questionGroups: QuestionGroup[] = [
   },
 ];
 
+const mergeFetchedData = (data: DataType, predefined: QuestionGroup[]): QuestionGroup[] => {
+  return predefined.map((group, groupIndex) => {
+    const updatedQuestions = group.questions.map((question, questionIndex) => ({
+      ...question,
+      question: data[groupIndex][questionIndex] || question.question,
+    }));
+
+    return {
+      ...group,
+      questions: updatedQuestions
+    };
+  });
+};
+
+// Function to get question
+const getQuestion = async (): Promise<DataType> => {
+  const response = await fetch('http://localhost:12345/question')
+  
+  if (!response.ok) {
+    throw new Error ('HTTP error! status: ${response.status}');
+  }
+
+  const result: APIQuestionResponse = await response.json();
+  const parsedData: DataType = result.questions
+  return parsedData
+};
+
+const postSubmitAnsweer = async (reqBody: SubmitRequestBody): Promise<SubmitResponse> => {
+  const response = await fetch('http://localhost:12345/validate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(reqBody)
+  });
+
+  if(!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 function App() {
   const [selectedGroup, setSelectedGroup] = useState<number>(1);
   const [answers, setAnswers] = useState<string[]>(Array(4).fill(""));
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [allQuestion, setAllQuestion] = useState<DataType>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [questionGroups, setQuestionGroups] = useState<QuestionGroup[]>(predefinedQuestionGroups);
+
+  useEffect(() => {
+    const fetchQuestion = async() => {
+      console.log('Fetching data...');
+      try {
+        const fetchedQuestion = await getQuestion();
+        console.log('Fetched Question: ', fetchedQuestion);
+        setAllQuestion(fetchedQuestion);
+        const mergedData = mergeFetchedData(fetchedQuestion, predefinedQuestionGroups)
+        setQuestionGroups(mergedData)
+      } catch (error: any) {
+        console.error('Fetch Error: ', error);
+      } finally {
+        setLoading(false)
+      }
+    };
+
+    fetchQuestion();
+  }, []);
 
   const currentQuestions =
     questionGroups.find((group) => group.group === selectedGroup)?.questions ||
