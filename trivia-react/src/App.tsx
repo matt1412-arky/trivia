@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Modal from "./components/SuccessModal"; // Import the Modal component
+import GroupConfirmModal from "./components/modal/GroupConfirmModal";
 
 import pk1 from "./assets/Post It-Key 1.png";
 import pk2 from "./assets/Post It-Key 2.png";
@@ -17,6 +18,9 @@ import mb5 from "./assets/Mandi Bola-5.png";
 
 import rm from "./assets/Reverse Mirror.png";
 import gtd from "./assets/Glow in The Dark.png";
+
+import Home from "./components/Home";
+import QuizPage from "./components/QuizPage";
 
 type Question = {
   question: string;
@@ -139,13 +143,13 @@ const questionGroups: QuestionGroup[] = [
         background: pk5,
       },
       {
-        question: "Who wrote 'Moby Dick'?",
+        question: "Who wrote 'Moby-Dick'?",
         correctAnswer: "Herman Melville",
         background: mb5,
       },
       {
-        question: "What planet is known as the Blue Planet?",
-        correctAnswer: "Earth",
+        question: "What planet is closest to the sun?",
+        correctAnswer: "Mercury",
         background: rm,
       },
       {
@@ -157,172 +161,55 @@ const questionGroups: QuestionGroup[] = [
   },
 ];
 
-function App() {
-  const [selectedGroup, setSelectedGroup] = useState<number>(1);
-  const [answers, setAnswers] = useState<string[]>(Array(4).fill(""));
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(15 * 60); // Set timer
-  const [showModal, setShowModal] = useState(false);
+const App: React.FC = () => {
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSecondsLeft((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(Math.abs(seconds) / 60);
-    const s = Math.abs(seconds) % 60;
-    return `${seconds < 0 ? "-" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
+  const handleGroupSelect = (group: number) => {
+    setSelectedGroup(group);
+    setModalVisible(true);
   };
 
-  const currentQuestions =
-    questionGroups.find((group) => group.group === selectedGroup)?.questions ||
-    [];
-
-  const handleChange = (value: string) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestion] = value;
-    setAnswers(newAnswers);
-  };
-
-  const handleNext = () => {
-    if (currentQuestion < currentQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+  const handleConfirm = () => {
+    setModalVisible(false);
+    if (selectedGroup !== null) {
+      window.location.href = `/quiz/${selectedGroup}`;
     }
   };
 
-  const handlePrev = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+  const handleCancel = () => {
+    setModalVisible(false);
+    setSelectedGroup(null);
   };
-
-  const handleSubmit = () => {
-    setSubmitted(true);
-    if (allCorrect) {
-      setShowModal(true); // Show modal on success
-    }
-  };
-
-  const handleGroupChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newGroup = parseInt(event.target.value);
-    setSelectedGroup(newGroup);
-    setAnswers(Array(4).fill("")); // Reset answers
-    setCurrentQuestion(0); // Reset current question
-    setSubmitted(false); // Reset submitted status
-  };
-
-  const allCorrect = answers.every(
-    (answer, index) =>
-      answer.trim().toLowerCase() ===
-      currentQuestions[index].correctAnswer.trim().toLowerCase()
-  );
-
-  const closeModal = () => setShowModal(false);
 
   return (
-    <div
-      className="app-container"
-      style={{
-        backgroundImage: `url(${currentQuestions[currentQuestion]?.background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-      }}
-    >
-      <div className="overlay">
-        <div className="timer">{formatTime(secondsLeft)}</div>
-        <div className="container mt-5">
-          <h1 className="mb-4 text-center">Trivia Quiz</h1>
-          <div className="mb-3">
-            <label htmlFor="groupSelect" className="form-label">
-              Select Question Group
-            </label>
-            <select
-              id="groupSelect"
-              className="form-select"
-              onChange={handleGroupChange}
-              value={selectedGroup}
-            >
-              {questionGroups.map((group) => (
-                <option key={group.group} value={group.group}>
-                  Group {group.group}
-                </option>
-              ))}
-            </select>
-          </div>
-          {submitted && !allCorrect && (
-            <div className="alert alert-danger text-center">
-              <p>Some answers are incorrect:</p>
-              <ul className="list-unstyled">
-                {answers.map(
-                  (answer, index) =>
-                    answer.trim().toLowerCase() !==
-                      currentQuestions[index].correctAnswer
-                        .trim()
-                        .toLowerCase() && (
-                      <li key={index}>Question {index + 1}</li>
-                    )
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Home onGroupSelect={handleGroupSelect} />
+                {selectedGroup !== null && (
+                  <GroupConfirmModal
+                    isOpen={modalVisible}
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                    selectedGroup={selectedGroup}
+                  />
                 )}
-              </ul>
-            </div>
-          )}
-          {/* {submitted && allCorrect && (
-            <div className="alert alert-success text-center mt-4">
-              Congratulations! You answered all questions correctly!
-            </div>
-          )} */}
-          <div className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">
-                {currentQuestions[currentQuestion]?.question}
-              </h5>
-              <textarea
-                className="form-control"
-                rows={4}
-                value={answers[currentQuestion]}
-                onChange={(e) => handleChange(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="d-flex justify-content-between">
-            <button
-              className="btn btn-secondary"
-              onClick={handlePrev}
-              disabled={currentQuestion === 0}
-            >
-              Prev
-            </button>
-            {currentQuestion === currentQuestions.length - 1 ? (
-              <button className="btn btn-primary" onClick={handleSubmit}>
-                Submit
-              </button>
-            ) : (
-              <button className="btn btn-primary" onClick={handleNext}>
-                Next
-              </button>
-            )}
-          </div>
-        </div>
-        <footer className="footer">
-          <p>
-            Developed by Panitia CAO in collaboration with Creative Space Coding
-            Team
-          </p>
-        </footer>
+              </>
+            }
+          />
+          <Route
+            path="/quiz/:group"
+            element={<QuizPage questionGroups={questionGroups} />}
+          />
+        </Routes>
       </div>
-
-      {/* Render the modal */}
-      <Modal
-        isVisible={showModal}
-        message="Congratulations! You answered all questions correctly!"
-        onClose={closeModal}
-      />
-    </div>
+    </Router>
   );
-}
+};
 
 export default App;

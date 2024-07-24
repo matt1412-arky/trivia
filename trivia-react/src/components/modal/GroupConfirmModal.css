@@ -1,0 +1,99 @@
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050; /* Ensure it's above other content */
+}
+
+/* Modal dialog */
+.modal-dialog {
+  max-width: 600px; /* Increased width for a more spacious look */
+  margin: 1.75rem auto;
+}
+
+/* Modal content */
+.modal-content {
+  background: #fff;
+  border-radius: 0.75rem; /* Slightly more rounded corners */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* Softer shadow for a modern look */
+  position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth animations */
+}
+
+/* Modal header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem; /* Increased padding for more space */
+  border-bottom: 1px solid #e9ecef; /* Lighter border for separation */
+  background-color: #007bff; /* Blue background for header */
+  color: #fff; /* White text color */
+}
+
+/* Modal body */
+.modal-body {
+  padding: 1.5rem; /* Increased padding for more space */
+  color: #212529; /* Darker text color for readability */
+}
+
+/* Modal footer */
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #e9ecef; /* Lighter border for separation */
+  background-color: #f1f3f5; /* Light background for footer */
+}
+
+/* Close button */
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #fff; /* Ensure visibility on blue background */
+  cursor: pointer;
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.btn-close:focus {
+  outline: none;
+}
+
+.btn-close:hover {
+  color: #e0e0e0; /* Lighter color for hover effect */
+}
+
+/* General button styling */
+.btn-nav {
+  padding: 0.5rem 1.5rem; /* Adjusted padding for consistency */
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-nav:hover {
+  background-color: #0056b3; /* Darker shade for hover effect */
+  transform: scale(1.05); /* Slight scaling effect */
+}
+
+.btn-nav:disabled {
+  background-color: #c6c6c6; /* Grey background for disabled state */
+  cursor: not-allowed;
+}
+
+.btn-prev {
+  background-color: #6c757d; /* Grey color for 'Previous' button */
+  color: #fff; /* White text color */
+}
+
+.btn-prev:hover {
+  background-color: #5a6268; /* Darker grey for hover effect */
+}
