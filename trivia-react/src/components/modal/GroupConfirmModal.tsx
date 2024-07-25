@@ -6,7 +6,7 @@ type GroupConfirmModalProps = {
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  selectedGroup: number;
+  selectedGroup: string;
 };
 
 const GroupConfirmModal: React.FC<GroupConfirmModalProps> = ({

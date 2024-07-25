@@ -22,6 +22,9 @@ import gtd from "./assets/Glow in The Dark.png";
 
 import Home from "./components/Home";
 import QuizPage from "./components/QuizPage";
+import { group } from "console";
+
+const groupName = ["uno", "dos", "tres", "cuatro", "cinco"];
 const predefinedQuestionGroups: QuestionGroup[] = [
   {
     group: 1,
@@ -234,7 +237,7 @@ const App: React.FC = () => {
                     isOpen={modalVisible}
                     onConfirm={handleConfirm}
                     onCancel={handleCancel}
-                    selectedGroup={selectedGroup}
+                    selectedGroup={groupName[selectedGroup-1]}
                   />
                 )}
               </>
