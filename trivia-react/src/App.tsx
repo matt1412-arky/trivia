@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { APIQuestionResponse, DataType, QuestionGroup, SubmitRequestBody, SubmitResponse } from "./types";
+import { APIQuestionResponse, DataType, QuestionGroup } from "./types";
 
 import GroupConfirmModal from "./components/modal/GroupConfirmModal";
 
@@ -22,9 +22,8 @@ import gtd from "./assets/Glow in The Dark.png";
 
 import Home from "./components/Home";
 import QuizPage from "./components/QuizPage";
-import { group } from "console";
 
-const groupName = ["uno", "dos", "tres", "cuatro", "cinco"];
+const groupName = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
 const predefinedQuestionGroups: QuestionGroup[] = [
   {
     group: 1,
@@ -153,7 +152,10 @@ const predefinedQuestionGroups: QuestionGroup[] = [
   },
 ];
 
-const mergeFetchedData = (data: DataType, predefined: QuestionGroup[]): QuestionGroup[] => {
+const mergeFetchedData = (
+  data: DataType,
+  predefined: QuestionGroup[]
+): QuestionGroup[] => {
   return predefined.map((group, groupIndex) => {
     const updatedQuestions = group.questions.map((question, questionIndex) => ({
       ...question,
@@ -162,44 +164,45 @@ const mergeFetchedData = (data: DataType, predefined: QuestionGroup[]): Question
 
     return {
       ...group,
-      questions: updatedQuestions
+      questions: updatedQuestions,
     };
   });
 };
 
 // Function to get question
 const getQuestion = async (): Promise<DataType> => {
-  const response = await fetch('http://localhost:12345/question')
-  
+  const response = await fetch("http://localhost:12345/question");
+
   if (!response.ok) {
-    throw new Error ('HTTP error! status: ${response.status}');
+    throw new Error("HTTP error! status: ${response.status}");
   }
 
   const result: APIQuestionResponse = await response.json();
-  const parsedData: DataType = result.questions
-  return parsedData
+  const parsedData: DataType = result.questions;
+  return parsedData;
 };
 
 const App: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [allQuestion, setAllQuestion] = useState<DataType>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [questionGroups, setQuestionGroups] = useState<QuestionGroup[]>(predefinedQuestionGroups);
+  const [questionGroups, setQuestionGroups] = useState<QuestionGroup[]>(
+    predefinedQuestionGroups
+  );
 
   useEffect(() => {
-    const fetchQuestion = async() => {
+    const fetchQuestion = async () => {
       // console.log('Fetching data...');
       try {
         const fetchedQuestion = await getQuestion();
         // console.log('Fetched Question: ', fetchedQuestion);
-        setAllQuestion(fetchedQuestion);
-        const mergedData = mergeFetchedData(fetchedQuestion, predefinedQuestionGroups)
-        setQuestionGroups(mergedData)
+        const mergedData = mergeFetchedData(
+          fetchedQuestion,
+          predefinedQuestionGroups
+        );
+        setQuestionGroups(mergedData);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         // console.error('Fetch Error: ', error);
-      } finally {
-        setLoading(false)
       }
     };
 
@@ -237,7 +240,7 @@ const App: React.FC = () => {
                     isOpen={modalVisible}
                     onConfirm={handleConfirm}
                     onCancel={handleCancel}
-                    selectedGroup={groupName[selectedGroup-1]}
+                    selectedGroup={groupName[selectedGroup - 1]}
                   />
                 )}
               </>

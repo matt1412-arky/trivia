@@ -4,19 +4,21 @@ import { useState, useEffect } from "react";
 import Modal from "./modal/SuccessModal"; // Import your Modal component
 import { QuizPageProps, SubmitResponse, SubmitRequestBody } from "../types";
 
-const postSubmitAnswer = (reqBody: SubmitRequestBody): Promise<SubmitResponse> => {
-  return fetch('http://localhost:12345/validate', {
-    method: 'POST',
+const postSubmitAnswer = (
+  reqBody: SubmitRequestBody
+): Promise<SubmitResponse> => {
+  return fetch("http://localhost:12345/validate", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(reqBody)
-  }).then(response => {
-    if(!response.ok) {
+    body: JSON.stringify(reqBody),
+  }).then((response) => {
+    if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
-  })
+  });
 };
 
 const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
@@ -46,6 +48,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
         setShowModal(true); // Show modal on success
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response]);
 
   const formatTime = (seconds: number) => {
@@ -76,20 +79,24 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
     setSubmitted(true);
     const reqBody: SubmitRequestBody = {
       group: selectedGroup,
-      answer: answers
-    }
-    // console.log('Req Body: ', reqBody)
+      answer: answers,
+    };
+    console.log("Req Body: ", reqBody);
     const fetchResponse = await postSubmitAnswer(reqBody);
-    // console.log('Response: ', fetchResponse)
-    setResponse(fetchResponse)
+    console.log("Response: ", fetchResponse);
+    setResponse(fetchResponse);
     // console.log(showModal)
   };
 
   const closeModal = () => setShowModal(false);
 
-  const allCorrect = (response?.verdicts && response?.verdicts.every(
-    (verdict, _ ) => verdict === true
-  )) || false;
+  const allCorrect =
+    (response?.verdicts &&
+      response?.verdicts.every(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (verdict, _) => verdict === true
+      )) ||
+    false;
 
   return (
     <div
@@ -115,7 +122,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
               </h4>
               <p>Here are the questions you missed:</p>
               <ul className="list-unstyled">
-                {response?.verdicts?.map((verdict, index ) =>
+                {response?.verdicts?.map((verdict, index) =>
                   verdict !== true ? (
                     <li key={index}>Question {index + 1}</li>
                   ) : null
@@ -168,7 +175,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
         isVisible={showModal}
         message="Congratulations! You answered all questions correctly!"
         onClose={closeModal}
-        code={response?.secret || ''}
+        code={response?.secret || ""}
       />
 
       {/* Footer */}

@@ -6,11 +6,14 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
-  const groups = ["uno", "dos", "tres", "cuatro", "cinco"];
+  const groups = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
 
   return (
     <div className="home-container">
-      <h1 className="mb-4 text-center">Select Question Group</h1>
+      <h1 className="main-title text-center">Welcome to Digital Pandemic</h1>{" "}
+      {/* Main title */}
+      <h2 className="subtitle text-center">Select Question Group</h2>{" "}
+      {/* Subtitle */}
       <div className="row mb-3 justify-content-center">
         {groups.map((group, index) => (
           <div
@@ -21,7 +24,7 @@ const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
           >
             <div
               className="group-card text-center p-4 border rounded"
-              onClick={() => onGroupSelect(index+1)}
+              onClick={() => onGroupSelect(index + 1)}
             >
               <h4>{group}</h4>
             </div>
