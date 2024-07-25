@@ -2,20 +2,21 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from "./modal/SuccessModal"; // Import your Modal component
+import { QuizPageProps, SubmitResponse, SubmitRequestBody } from "../types";
 
-type Question = {
-  question: string;
-  correctAnswer: string;
-  background: string;
-};
-
-type QuestionGroup = {
-  group: number;
-  questions: Question[];
-};
-
-type QuizPageProps = {
-  questionGroups: QuestionGroup[];
+const postSubmitAnswer = (reqBody: SubmitRequestBody): Promise<SubmitResponse> => {
+  return fetch('http://localhost:12345/validate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(reqBody)
+  }).then(response => {
+    if(!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
 };
 
 const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
@@ -27,6 +28,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
   const [submitted, setSubmitted] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(15 * 60); // Set timer
   const [showModal, setShowModal] = useState(false); // State for showing the modal
+  const [response, setResponse] = useState<SubmitResponse>();
 
   const currentQuestions =
     questionGroups.find((g) => g.group === selectedGroup)?.questions || [];
@@ -37,6 +39,14 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (response) {
+      if (allCorrect) {
+        setShowModal(true); // Show modal on success
+      }
+    }
+  }, [response]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(Math.abs(seconds) / 60);
@@ -62,20 +72,24 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmitted(true);
-    if (allCorrect) {
-      setShowModal(true); // Show modal on success
+    const reqBody: SubmitRequestBody = {
+      group: selectedGroup,
+      answer: answers
     }
+    // console.log('Req Body: ', reqBody)
+    const fetchResponse = await postSubmitAnswer(reqBody);
+    // console.log('Response: ', fetchResponse)
+    setResponse(fetchResponse)
+    // console.log(showModal)
   };
 
   const closeModal = () => setShowModal(false);
 
-  const allCorrect = answers.every(
-    (answer, index) =>
-      answer.trim().toLowerCase() ===
-      currentQuestions[index].correctAnswer.trim().toLowerCase()
-  );
+  const allCorrect = (response?.verdicts && response?.verdicts.every(
+    (verdict, _ ) => verdict === true
+  )) || false;
 
   return (
     <div
@@ -101,9 +115,8 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
               </h4>
               <p>Here are the questions you missed:</p>
               <ul className="list-unstyled">
-                {answers.map((answer, index) =>
-                  answer.trim().toLowerCase() !==
-                  currentQuestions[index].correctAnswer.trim().toLowerCase() ? (
+                {response?.verdicts?.map((verdict, index ) =>
+                  verdict !== true ? (
                     <li key={index}>Question {index + 1}</li>
                   ) : null
                 )}
@@ -150,12 +163,12 @@ const QuizPage: React.FC<QuizPageProps> = ({ questionGroups }) => {
           </div>
         </div>
       </div>
-
       {/* Render the modal */}
       <Modal
         isVisible={showModal}
         message="Congratulations! You answered all questions correctly!"
         onClose={closeModal}
+        code={response?.secret || ''}
       />
 
       {/* Footer */}

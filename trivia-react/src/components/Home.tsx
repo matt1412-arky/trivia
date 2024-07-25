@@ -6,7 +6,7 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
-  const groups = [1, 2, 3, 4, 5];
+  const groups = ["uno", "dos", "tres", "cuatro", "cinco"];
 
   return (
     <div className="home-container">
@@ -21,9 +21,9 @@ const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
           >
             <div
               className="group-card text-center p-4 border rounded"
-              onClick={() => onGroupSelect(group)}
+              onClick={() => onGroupSelect(index+1)}
             >
-              <h4>Group {group}</h4>
+              <h4>{group}</h4>
             </div>
           </div>
         ))}

@@ -8,9 +8,10 @@ type ModalProps = {
   isVisible: boolean;
   message: string;
   onClose: () => void;
+  code: string;
 };
 
-const Modal: React.FC<ModalProps> = ({ isVisible, message, onClose }) => {
+const Modal: React.FC<ModalProps> = ({ isVisible, message, onClose, code }) => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleClose = () => {
@@ -40,6 +41,8 @@ const Modal: React.FC<ModalProps> = ({ isVisible, message, onClose }) => {
           </div>
           <div className="modal-body">
             <p>{message}</p>
+            <p style={{ textAlign: 'center' }}> Your secret code is:</p>
+            <p style={{ textAlign: 'center', fontSize: '120px' }}><b>{code}</b></p>
           </div>
           <div className="modal-footer">
             <button
