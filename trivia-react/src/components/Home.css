@@ -1,0 +1,86 @@
+/* Home.css */
+
+.home-container {
+    background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0'); /* Replace with your preferred background image */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #000; /* Change text color to black */
+}
+  
+.group-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #007bff;
+    color: #000; /* Change text color inside cards to black */
+}
+  
+.group-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+  
+.group-card:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+    transition: transform 0.5s;
+}
+  
+.group-card:hover:before {
+    transform: rotate(180deg);
+}
+  
+.group-card h4 {
+    position: relative;
+    z-index: 1;
+    animation: floating 3s ease-in-out infinite;
+}
+  
+@keyframes floating {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+}
+  
+h1 {
+    animation: fadeInDown 2s ease-in-out;
+}
+  
+@keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+  
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    color: #000; /* Text color */
+    border-top: 1px solid #ddd; /* Optional border */
+}

@@ -10,7 +10,7 @@ export interface SubmitRequestBody {
 }
 export interface SubmitResponse {
   secret: string;
-  verdict: boolean[];
+  verdicts: boolean[];
 }
 
 export type Question = {
@@ -22,5 +22,8 @@ export type Question = {
 export type QuestionGroup = {
   group: number;
   questions: Question[];
+};
+export type QuizPageProps = {
+  questionGroups: QuestionGroup[];
 };
 
