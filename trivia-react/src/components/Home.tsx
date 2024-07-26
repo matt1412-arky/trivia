@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import "./Home.css"; // Import the CSS file for custom styling
 
 type HomeProps = {
@@ -7,6 +8,7 @@ type HomeProps = {
 
 const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
   const groups = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
+  const navigate = useNavigate(); // Use useNavigate hook for navigation
 
   return (
     <div className="home-container">
@@ -31,6 +33,12 @@ const Home: React.FC<HomeProps> = ({ onGroupSelect }) => {
           </div>
         ))}
       </div>
+      <button
+        className="btn-nav btn-primary mt-4"
+        onClick={() => navigate("/secret-code")}
+      >
+        Enter Secret Code
+      </button>
       <footer className="footer">
         <p>
           Developed by the CAO Committee in collaboration with the Creative

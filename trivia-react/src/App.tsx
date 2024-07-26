@@ -22,6 +22,7 @@ import gtd from "./assets/Glow in The Dark.png";
 
 import Home from "./components/Home";
 import QuizPage from "./components/QuizPage";
+import SecretCode from "./components/SecretCode";
 
 const groupName = ["Uno", "Dos", "Tres", "Cuatro", "Cinco"];
 const predefinedQuestionGroups: QuestionGroup[] = [
@@ -250,6 +251,7 @@ const App: React.FC = () => {
             path="/quiz/:group"
             element={<QuizPage questionGroups={questionGroups} />}
           />
+          <Route path="/secret-code" element={<SecretCode />} />
         </Routes>
       </div>
     </Router>
