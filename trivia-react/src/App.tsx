@@ -36,12 +36,12 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "Who wrote 'To Kill a Mockingbird'?",
         correctAnswer: "Harper Lee",
-        background: mb1,
+        background: rm,
       },
       {
         question: "What is the smallest planet in our solar system?",
         correctAnswer: "Mercury",
-        background: rm,
+        background: mb1,
       },
       {
         question: "What is the chemical symbol for gold?",
@@ -56,7 +56,7 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "What is the capital of Germany?",
         correctAnswer: "Berlin",
-        background: pk2,
+        background: rm,
       },
       {
         question: "Who wrote '1984'?",
@@ -66,7 +66,7 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "What is the largest planet in our solar system?",
         correctAnswer: "Jupiter",
-        background: rm,
+        background: pk2,
       },
       {
         question: "What is the chemical symbol for silver?",
@@ -81,22 +81,22 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "What is the capital of Japan?",
         correctAnswer: "Tokyo",
-        background: pk3,
+        background: mb3,
       },
       {
         question: "Who wrote 'Pride and Prejudice'?",
         correctAnswer: "Jane Austen",
-        background: mb3,
+        background: pk3,
       },
       {
         question: "What planet is known as the Red Planet?",
         correctAnswer: "Mars",
-        background: rm,
+        background: gtd,
       },
       {
         question: "What is the chemical symbol for sodium?",
         correctAnswer: "Na",
-        background: gtd,
+        background: rm,
       },
     ],
   },
@@ -106,22 +106,22 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "What is the capital of Italy?",
         correctAnswer: "Rome",
-        background: pk4,
+        background: gtd,
       },
       {
         question: "Who wrote 'The Great Gatsby'?",
         correctAnswer: "F. Scott Fitzgerald",
-        background: mb4,
+        background: rm,
       },
       {
         question: "What planet is known for its rings?",
         correctAnswer: "Saturn",
-        background: rm,
+        background: mb4,
       },
       {
         question: "What is the chemical symbol for potassium?",
         correctAnswer: "K",
-        background: gtd,
+        background: pk4,
       },
     ],
   },
@@ -131,22 +131,22 @@ const predefinedQuestionGroups: QuestionGroup[] = [
       {
         question: "What is the capital of Canada?",
         correctAnswer: "Ottawa",
-        background: pk5,
+        background: mb5,
       },
       {
         question: "Who wrote 'Moby-Dick'?",
         correctAnswer: "Herman Melville",
-        background: mb5,
+        background: gtd,
       },
       {
         question: "What planet is closest to the sun?",
         correctAnswer: "Mercury",
-        background: rm,
+        background: pk5,
       },
       {
         question: "What is the chemical symbol for iron?",
         correctAnswer: "Fe",
-        background: gtd,
+        background: rm,
       },
     ],
   },
